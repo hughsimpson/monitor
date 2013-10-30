@@ -36,15 +36,15 @@ object BuildSettings {
     // add the compiled aspects as products
     products in Compile <++= products in Aspectj
   )
-
-  lazy val compileClojure: Setting[Unit] = {
+  val compile_clojure_task = TaskKey[Unit]("compile_clojure_task")
+  lazy val compileClojure = compile_clojure_task := {
     import clojure.lang._
     import clojure.lang.{RT, Var, Compiler}
     import java.io.StringReader
     import scala.io.Source
-    val notionalScriptFileName="DataDogCounterInterface.clj"
-    val clojureScript = Source.fromInputStream(getClass.getResourceAsStream("output-datadog/src/main/clojure/org/eigengo/monitor/output/datadog/"+notionalScriptFileName)).mkString
-    val outputDirectory="output-datadog/target/"
+    val notionalScriptFileName="org.eigengo.monitor.output.datadog.DataDogCounterInterface"
+    val clojureScript = Source.fromInputStream(getClass.getResourceAsStream("../output-datadog/src/main/resources/DataDogCounterInterface.clj")).mkString
+    val outputDirectory="../output-datadog/target/"
 
     val compilePath : Var = RT.`var`("clojure.core", "*compile-path*");
     val compileFiles : Var = RT.`var`("clojure.core", "*compile-files*");

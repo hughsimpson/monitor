@@ -27,6 +27,7 @@ public class StatsdCounterInterface implements CounterInterface {
 
     @Override
     public void incrementCounter(String aspect, String... tags) {
+        System.out.print("&&&&&^^");
         statsd.incrementCounter(aspect, tags);
     }
 

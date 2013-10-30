@@ -22,6 +22,7 @@ object MonitorBuild extends Build {
     id = "parent", 
     base = file("."), 
     settings = BuildSettings.buildSettings ++ Seq(
+      compileClojure,
       libraryDependencies += clojure_lang,
       javaOptions in run += "-javaagent:" + System.getProperty("user.home") + "/.ivy2/cache/org.aspectj/aspectjweaver/jars/aspectjweaver-1.7.3.jar",
       fork in run := true,

@@ -17,7 +17,7 @@ public class JavaWrapperForDataDogInterface implements CounterInterface {
 
     @Override
     public void incrementCounter(String aspect, String... tags) {
-//        org.eigengo.monitor.output.DataDogCounterInterface.incrementCounter(aspect, tags);
+//        System.out.println(org.eigengo.monitor.output.DataDogCounterInterface.binomial(10, 3));
         // noop
     }
 

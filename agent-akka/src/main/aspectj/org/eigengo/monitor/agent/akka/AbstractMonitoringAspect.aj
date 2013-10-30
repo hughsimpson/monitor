@@ -30,16 +30,16 @@ abstract aspect AbstractMonitoringAspect {
 
     protected static final CounterInterface counterInterface = createCounterInterface();
 
-    private static CounterInterface createCounterInterface() {
+    private static CounterInterface createCounterInterface() throws ClassCastException {
         try {
             AgentConfiguration configuration = getAgentConfiguration();
             CounterInterface counterInterface = (CounterInterface)Class.forName(configuration.common().counterInterfaceClassName()).newInstance();
             return counterInterface;
         } catch (final ReflectiveOperationException e) {
             return new NullCounterInterface();
-        } catch (final ClassCastException e) {
+        } /*catch (final ClassCastException e) {
             return new NullCounterInterface();
-        }
+        }*/
     }
 
     private static AgentConfiguration getAgentConfiguration() {

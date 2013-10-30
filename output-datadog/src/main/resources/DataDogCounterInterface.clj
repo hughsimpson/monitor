@@ -10,6 +10,7 @@
 ;              #^{:static true} [logSuccess [] void]] ; example of how to declare a static method for java interop
     )
   (:require clojure.java.io)
+  (:require org.eigengo.monitor.output.CounterInterface)
   (:import (java.net InetAddress DatagramPacket DatagramSocket)))
 
 (def udp-server (ref nil))
@@ -42,12 +43,16 @@
 ; Java-callable wrappers for our methods...
 
 (defn -incrementCounter [s args]
+  (println "aaaaaaaaaaaaaaaa")
   (increment-counter s args))
 (defn -decrementCounter [s args]
+  (println "bbbbbbbbbb")
   (decrement-counter s args))
 (defn -recordGaugeValue [s i args]
+  (println "ccccccc")
   (record-gauge-value s i args))
 (defn -recordExecutionTime [s i args]
+  (println "_________")
   (record-execution-time s i args))
 
 ; Common methods for datagram construction
