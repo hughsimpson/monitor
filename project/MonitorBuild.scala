@@ -44,6 +44,9 @@ object MonitorBuild extends Build {
   lazy val output_statsd = module("output-statsd") dependsOn (output) settings (
   	libraryDependencies += dogstatsd_client
   )
+  lazy val output_datadog = module("output-datadog") settings (
+    libraryDependencies += clojure
+    )
   lazy val test = module("test") dependsOn (output) settings (
   	libraryDependencies += specs2 % "test"
   )
