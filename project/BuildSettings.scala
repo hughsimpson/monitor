@@ -37,14 +37,14 @@ object BuildSettings {
     products in Compile <++= products in Aspectj
   )
 
-  lazy val compileClojure = {
+  lazy val compileClojure: Setting[Unit] = {
     import clojure.lang._
     import clojure.lang.{RT, Var, Compiler}
     import java.io.StringReader
     import scala.io.Source
     val notionalScriptFileName="DataDogCounterInterface.clj"
     val clojureScript = Source.fromInputStream(getClass.getResourceAsStream("output-datadog/src/main/clojure/org/eigengo/monitor/output/datadog/"+notionalScriptFileName)).mkString
-    val outputDirectory="src/../target/"
+    val outputDirectory="output-datadog/target/"
 
     val compilePath : Var = RT.`var`("clojure.core", "*compile-path*");
     val compileFiles : Var = RT.`var`("clojure.core", "*compile-files*");
