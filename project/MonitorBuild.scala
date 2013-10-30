@@ -1,5 +1,9 @@
+import java.lang.Compiler
 import sbt._
 import Keys._
+//import clojure.lang.{RT, Var, Compiler}
+//import java.io.StringReader
+//import scala.io.Source
 
 object MonitorBuild extends Build {
   import BuildSettings._
@@ -18,6 +22,7 @@ object MonitorBuild extends Build {
     id = "parent", 
     base = file("."), 
     settings = BuildSettings.buildSettings ++ Seq(
+      libraryDependencies += clojure_lang,
       javaOptions in run += "-javaagent:" + System.getProperty("user.home") + "/.ivy2/cache/org.aspectj/aspectjweaver/jars/aspectjweaver-1.7.3.jar",
       fork in run := true,
       connectInput in run := true,
@@ -44,8 +49,8 @@ object MonitorBuild extends Build {
   lazy val output_statsd = module("output-statsd") dependsOn (output) settings (
   	libraryDependencies += dogstatsd_client
   )
-  lazy val output_datadog = module("output-datadog") settings (
-    libraryDependencies += clojure
+  lazy val output_datadog = module("output-datadog") dependsOn (output) settings (
+    libraryDependencies += clojure_lang
     )
   lazy val test = module("test") dependsOn (output) settings (
   	libraryDependencies += specs2 % "test"
@@ -62,7 +67,7 @@ object MonitorBuild extends Build {
   lazy val agent_spray = module("agent-spray") dependsOn(agent, output)
   lazy val agent_play  = module("agent-play")  dependsOn(agent, output)
 
-  lazy val example_akka = module("example-akka") dependsOn(agent_akka, output_statsd) settings (
+  lazy val example_akka = module("example-akka") dependsOn(agent_akka, output_statsd, output_datadog) settings (
   	libraryDependencies += akka_actor
   )
 
