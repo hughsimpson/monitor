@@ -23,7 +23,7 @@ object MonitorBuild extends Build {
   lazy val root = Project(
     id = "parent", 
     base = file("."), 
-    settings = BuildSettings.buildSettings ++ SphinxSupport.settings ++ scalaJavaUnidocSettings ++ unidocSettings ++ Seq(
+    settings = BuildSettings.buildSettings ++ BuildSettings.prePublishing ++ SphinxSupport.settings ++ scalaJavaUnidocSettings ++ unidocSettings ++ Seq(
       unidocConfigurationFilter in (TestScalaUnidoc, unidoc) := inConfigurations(Compile, Test),
       unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject,
       // generate online version of docs
