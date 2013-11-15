@@ -2,22 +2,21 @@ package org.eigengo.monitor.example;
 
 import akka.actor.*;
 import akka.routing.RoundRobinRouter;
+import akka.routing.RouterConfig;
 import org.eigengo.monitor.example.akka.ListMaker;
-import scala.Option;
 import scala.collection.immutable.List;
-import scala.collection.immutable.Nil;
-import scala.collection.immutable.Seq;
 import scala.util.matching.Regex;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class JavaMain {
 
     static ActorSystem system = ActorSystem.create("example");
-    static ActorRef bar = system.actorOf(Props.create(BarActor.class, List.empty()), "bar");
+    static Props barProps = Props.create(BarActor.class, List.empty());
+    static RouterConfig barConfig = new RoundRobinRouter(10);
+    static ActorRef bar = system.actorOf(barProps.withRouter(barConfig), "bar");
     static ActorRef foo = system.actorOf(Props.create(FooActor.class, new ListMaker(bar).toSomeSeq()), "foo");
     static Regex CountPattern = new Regex("(\\d+)", new ListMaker("number").toStringSeq());
     static boolean keepGoing;
