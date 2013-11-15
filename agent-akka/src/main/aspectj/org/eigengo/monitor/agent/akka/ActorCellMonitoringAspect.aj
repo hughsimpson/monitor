@@ -35,7 +35,9 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
     private final Option<String> noActorClazz = Option.empty();
     private final ConcurrentHashMap<Option<String>, AtomicLong> samplingCounters  = new ConcurrentHashMap<Option<String>, AtomicLong>();
     private final ConcurrentHashMap<Option<String>, AtomicInteger> numberOfActors = new ConcurrentHashMap<Option<String>, AtomicInteger>();
-
+    private enum CountType {
+        Increment, Decrement
+    }
 
     /**
      * Constructs this aspect
@@ -129,7 +131,10 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
     }
 
     /**
-     * returns the canonical name of the actor type associated with a Props instance
+     * Returns the canonical name of the actor type associated with a Props instance
+     *
+     * Returns null if props.actorClass does not have a canonical name (i.e., if
+     * it is a local or anonymous class)
      * */
     private String uncheckedActorNameFrom(final Props props) {
         return props.actorClass().getCanonicalName();
@@ -207,10 +212,6 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
         }
     }
 
-    private enum CountType {
-        Increment, Decrement
-    }
-
     /**
      * Advises the {@code actorOf} method of {@code ActorRefFactory} implementations
      *
@@ -256,10 +257,10 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
          else checkedClassName = uncheckedClassName;
 
          this.counterInterface.recordGaugeValue("akka.actor.count", currentNumberOfActors,
-                 "parent."+path.parent().toString(),
-                 "path."+path.toString(),
-                 "props."+props.clazz().toString(),
-                 "className."+checkedClassName);
+                 String.format("parent.%s", path.parent().toString()),
+                 String.format("path.%s", path.toString()),
+                 String.format("props.%s", props.clazz().toString()),
+                 String.format("className.%s", checkedClassName));
 
      }
 }
