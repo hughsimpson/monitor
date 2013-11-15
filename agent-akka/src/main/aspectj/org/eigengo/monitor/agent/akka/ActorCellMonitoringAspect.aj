@@ -240,9 +240,15 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
 
          this.numberOfActors.putIfAbsent(className, new AtomicInteger(0));
          // increment and get the current number of actors of this type (if the value was 0, then this returns 1 -- which is correct)
-         final int currentNumberOfActors;
-         if (countType == CountType.Increment) currentNumberOfActors = this.numberOfActors.get(className).incrementAndGet();
-         else currentNumberOfActors = this.numberOfActors.get(className).decrementAndGet();
+         int currentNumberOfActors = 0;
+         switch(countType) {
+             case Increment:
+                 currentNumberOfActors = this.numberOfActors.get(className).incrementAndGet();
+                 break;
+             case Decrement:
+                 currentNumberOfActors = this.numberOfActors.get(className).decrementAndGet();
+                 break;
+         }
 
          // record the current number of actors of this type
          String checkedClassName;
