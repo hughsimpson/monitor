@@ -23,7 +23,7 @@ object MonitorBuild extends Build {
   lazy val root = Project(
     id = "parent", 
     base = file("."), 
-    settings = BuildSettings.buildSettings ++ BuildSettings.prePublishing ++ SphinxSupport.settings ++ scalaJavaUnidocSettings ++ unidocSettings ++ Seq(
+    settings = BuildSettings.buildSettings ++ SphinxSupport.settings ++ scalaJavaUnidocSettings ++ unidocSettings ++ Seq(
       unidocConfigurationFilter in (TestScalaUnidoc, unidoc) := inConfigurations(Compile, Test),
       unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject,
       // generate online version of docs
@@ -36,7 +36,6 @@ object MonitorBuild extends Build {
       fork in run := true,
       connectInput in run := true,
       mainClass in (Compile, run) := Some("org.eigengo.monitor.example.akka.Main")),
-//    mainClass in (Compile, run) := Some("org.eigengo.monitor.example.JavaMain")),
     aggregate = Seq(agent, output, output_statsd, agent_akka, agent_spray, agent_play, example_akka, docs)) dependsOn (example_akka)
 
 /*
