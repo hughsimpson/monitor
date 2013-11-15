@@ -46,4 +46,8 @@ object BuildSettings {
     products in Compile <++= products in Aspectj
   )
 
+  val prePublishing = TaskKey[Unit]("prePublishing") := {
+    println("Hello World")
+  }
+
 }
