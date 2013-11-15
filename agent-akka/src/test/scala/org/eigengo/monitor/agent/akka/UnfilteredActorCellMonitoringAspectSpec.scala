@@ -68,7 +68,7 @@ class UnfilteredActorCellMonitoringAspectSpec extends ActorCellMonitoringAspectS
       TestCounterInterface.clear()
 
       val simpleActor = system.actorOf(Props.create(new SimpleActorCreator))
-      TestCounterInterface.foldlByAspect(actorCount)((a, _) => a) must contain(TestCounter(actorCount, 1,simpleActorTags))
+      TestCounterInterface.foldlByAspect(actorCount)((a, _) => a) must contain(TestCounter(actorCount, 1, simpleActorTags))
       // stop(self)
       simpleActor ! 'stop
 

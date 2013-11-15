@@ -226,9 +226,9 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
         recordActorCount(actorCell.self().path(), actorCell.props(), false);
     }
 
-    /**
+    /*
      * Shares logic between the actorCellInternalStop and anyActorOf advices
-     * */
+     */
      private void recordActorCount(ActorPath path, Props props, boolean isCreated /*else is killed*/) {
          final String uncheckedClassName = uncheckedActorNameFrom(props);
          final Option<String> className = Option.apply(uncheckedClassName);

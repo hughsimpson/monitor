@@ -11,9 +11,8 @@ import scala.concurrent.duration.FiniteDuration;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-public class HelloAkkaJava {
+public class ExampleAkkaSystemWithJavaApiForTests {
     public static class Greet implements Serializable {}
-    public static class Die implements Serializable {}
     public static class WhoToGreet implements Serializable {
         public final String who;
         public WhoToGreet(String who) {
@@ -28,18 +27,15 @@ public class HelloAkkaJava {
     }
 
     public static class Greeter extends UntypedActor {
-        String greeting = "";
+        private String greeting = "";
 
         public void onReceive(Object message) {
-            if (message.toString().equals("die"))
-            context().stop(self());
+            if (message.toString().equals("die")) context().stop(self());
 
-            else if (message instanceof WhoToGreet)
-                greeting = "hello, " + ((WhoToGreet) message).who;
+            else if (message instanceof WhoToGreet) greeting = "hello, " + ((WhoToGreet) message).who;
 
-            else if (message instanceof Greet)
                 // Send the current greeting back to the sender
-                getSender().tell(new Greeting(greeting), getSelf());
+            else if (message instanceof Greet) getSender().tell(new Greeting(greeting), getSelf());
 
             else unhandled(message);
         }
@@ -79,11 +75,9 @@ public class HelloAkkaJava {
 
     public static class GreetPrinter extends UntypedActor {
         public void onReceive(Object message) {
-            if (message.toString().equals("die"))
-                context().stop(self());
+            if (message.toString().equals("die")) context().stop(self());
 
-            else if (message instanceof Greeting)
-                System.out.println(((Greeting) message).message);
+            else if (message instanceof Greeting) System.out.println(((Greeting) message).message);
 
         }
     }

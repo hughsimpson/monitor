@@ -13,22 +13,22 @@ class JavaApiFiltersSpec  extends ActorCellMonitoringAspectSpec(Some("javaapifil
     // records the count of actors, grouped by simple class name
     "Record the actor count" in {
       TestCounterInterface.clear()
-      val akkaSystem = HelloAkkaJava.run(Array.empty)
+      val akkaSystem = ExampleAkkaSystemWithJavaApiForTests.run(Array.empty)
       val parentPath = "parent.akka://helloakka/user"
       val unnamedActorPath = "path.akka://helloakka/user/$a"
-      val propsClazz = "props.class org.eigengo.monitor.agent.akka.HelloAkkaJava$GreetPrinter"
-      val className = "className.org.eigengo.monitor.agent.akka.HelloAkkaJava.GreetPrinter"
+      val propsClazz = "props.class org.eigengo.monitor.agent.akka.ExampleAkkaSystemWithJavaApiForTests$GreetPrinter"
+      val className = "className.org.eigengo.monitor.agent.akka.ExampleAkkaSystemWithJavaApiForTests.GreetPrinter"
 
       val unnamedGreetPrinterTags = List(parentPath, unnamedActorPath, propsClazz, className)
       val namedGreetPrinterTags = List(parentPath, "path.akka://helloakka/user/greetPrinter", propsClazz, className)
       val greeterTags = List(parentPath, "path.akka://helloakka/user/greeter",
-        "props.class org.eigengo.monitor.agent.akka.HelloAkkaJava$Greeter",
-        "className.org.eigengo.monitor.agent.akka.HelloAkkaJava.Greeter")
+        "props.class org.eigengo.monitor.agent.akka.ExampleAkkaSystemWithJavaApiForTests$Greeter",
+        "className.org.eigengo.monitor.agent.akka.ExampleAkkaSystemWithJavaApiForTests.Greeter")
 
 
       val greeter = akkaSystem.actorSelection("greeter")
       val namedGreetPrinter = akkaSystem.actorSelection("namedPrinter")
-      val unnamedGreetPrinter = akkaSystem.actorOf(Props[HelloAkkaJava.GreetPrinter])
+      val unnamedGreetPrinter = akkaSystem.actorOf(Props[ExampleAkkaSystemWithJavaApiForTests.GreetPrinter])
 
 
       Thread.sleep(100L)
