@@ -35,16 +35,12 @@ class JavaApiFiltersSpec  extends ActorCellMonitoringAspectSpec(Some("javaapifil
       val propsClazz = "props.class org.eigengo.monitor.agent.akka.ExampleAkkaSystemWithJavaApiForTests$GreetPrinter"
       val className = "className.org.eigengo.monitor.agent.akka.ExampleAkkaSystemWithJavaApiForTests.GreetPrinter"
 
-      val unnamedGreetPrinterTags = List(parentPath, unnamedActorPath, propsClazz, className)
       val namedGreetPrinterTags = List(parentPath, "path.akka://helloakka/user/greetPrinter", propsClazz, className)
       val greeterTags = List(parentPath, "path.akka://helloakka/user/greeter",
         "props.class org.eigengo.monitor.agent.akka.ExampleAkkaSystemWithJavaApiForTests$Greeter",
         "className.org.eigengo.monitor.agent.akka.ExampleAkkaSystemWithJavaApiForTests.Greeter")
 
-
-      val greeter = akkaSystem.actorSelection("greeter")
-      val namedGreetPrinter = akkaSystem.actorSelection("namedPrinter")
-      val unnamedGreetPrinter = akkaSystem.actorOf(Props[ExampleAkkaSystemWithJavaApiForTests.GreetPrinter])
+      akkaSystem.actorOf(Props[ExampleAkkaSystemWithJavaApiForTests.GreetPrinter])
 
 
       Thread.sleep(100L)

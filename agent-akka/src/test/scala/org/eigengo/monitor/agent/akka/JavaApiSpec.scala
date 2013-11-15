@@ -41,10 +41,7 @@ class JavaApiSpec  extends ActorCellMonitoringAspectSpec(Some("javaapi.conf")) {
         "props.class org.eigengo.monitor.agent.akka.ExampleAkkaSystemWithJavaApiForTests$Greeter",
         "className.org.eigengo.monitor.agent.akka.ExampleAkkaSystemWithJavaApiForTests.Greeter")
 
-
-      val greeter = akkaSystem.actorSelection("greeter")
-      val namedGreetPrinter = akkaSystem.actorSelection("namedPrinter")
-      val unnamedGreetPrinter = akkaSystem.actorOf(Props[ExampleAkkaSystemWithJavaApiForTests.GreetPrinter])
+      akkaSystem.actorOf(Props[ExampleAkkaSystemWithJavaApiForTests.GreetPrinter])
 
 
       Thread.sleep(100L)
