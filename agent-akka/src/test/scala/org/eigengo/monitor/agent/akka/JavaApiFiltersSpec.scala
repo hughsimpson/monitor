@@ -17,7 +17,6 @@ package org.eigengo.monitor.agent.akka
 
 import org.eigengo.monitor.{TestCounter, TestCounterInterface}
 import akka.actor.Props
-import org.eigengo.monitor.agent.akka.sharedCode.takeLHS
 
 class JavaApiFiltersSpec  extends ActorCellMonitoringAspectSpec(Some("javaapifilters.conf")) {
   sequential
@@ -44,7 +43,7 @@ class JavaApiFiltersSpec  extends ActorCellMonitoringAspectSpec(Some("javaapifil
 
 
       Thread.sleep(100L)
-      TestCounterInterface.foldlByAspect(actorCount)(takeLHS) must containAllOf(Seq(
+      TestCounterInterface.foldlByAspect(actorCount)(TestCounter.takeLHS) must containAllOf(Seq(
         TestCounter(actorCount, 1, namedGreetPrinterTags),
         TestCounter(actorCount, 1, greeterTags)))
 
@@ -52,7 +51,7 @@ class JavaApiFiltersSpec  extends ActorCellMonitoringAspectSpec(Some("javaapifil
       akkaSystem.shutdown()
       Thread.sleep(1000L)
 
-      val countersAfterShutdown = TestCounterInterface.foldlByAspect(actorCount)(takeLHS)
+      val countersAfterShutdown = TestCounterInterface.foldlByAspect(actorCount)(TestCounter.takeLHS)
       countersAfterShutdown must containAnyOf(Seq(
         TestCounter(actorCount, 0, namedGreetPrinterTags),
         TestCounter(actorCount, 0, greeterTags)))

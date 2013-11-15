@@ -19,7 +19,6 @@ import akka.actor.Props
 import akka.testkit.TestActorRef
 import akka.routing.RoundRobinRouter
 import org.eigengo.monitor.{TestCounterInterface, ContainsTag, TestCounter}
-import org.eigengo.monitor.agent.akka.sharedCode.takeLHS
 
 /**
  * Checks that the ``ActorCellMonitoringAspect`` records the required information.
@@ -52,14 +51,14 @@ class UnfilteredActorCellMonitoringAspectSpec extends ActorCellMonitoringAspectS
       val actorName = "counter"
       val simpleActor = system.actorOf(Props[SimpleActor], actorName)
 
-      TestCounterInterface.foldlByAspect(actorCount)(takeLHS) must contain(TestCounter(actorCount, 1, simpleActorTags))
+      TestCounterInterface.foldlByAspect(actorCount)(TestCounter.takeLHS) must contain(TestCounter(actorCount, 1, simpleActorTags))
 
       // stop(self)
       simpleActor ! 'stop
 
       Thread.sleep(500)   // wait for the messages
        // we're sending gauge values here. We want the latest (hence our fold takes the 'head')
-      TestCounterInterface.foldlByAspect(actorCount)(takeLHS) must contain(TestCounter(actorCount, 0, simpleActorTags))
+      TestCounterInterface.foldlByAspect(actorCount)(TestCounter.takeLHS) must contain(TestCounter(actorCount, 0, simpleActorTags))
     }
 
     "Record the actor count using a creator" in {
@@ -69,13 +68,13 @@ class UnfilteredActorCellMonitoringAspectSpec extends ActorCellMonitoringAspectS
       TestCounterInterface.clear()
 
       val simpleActor = system.actorOf(Props.create(new SimpleActorCreator))
-      TestCounterInterface.foldlByAspect(actorCount)(takeLHS) must contain(TestCounter(actorCount, 1, simpleActorTags))
+      TestCounterInterface.foldlByAspect(actorCount)(TestCounter.takeLHS) must contain(TestCounter(actorCount, 1, simpleActorTags))
       // stop(self)
       simpleActor ! 'stop
 
       Thread.sleep(500) // wait for the messages
       // we're sending gauge values here. We want the latest (hence our fold takes the 'head')
-      TestCounterInterface.foldlByAspect(actorCount)(takeLHS) must contain(TestCounter(actorCount, 0, simpleActorTags))
+      TestCounterInterface.foldlByAspect(actorCount)(TestCounter.takeLHS) must contain(TestCounter(actorCount, 0, simpleActorTags))
     }
 
     "Record the actor count of a named actor using a creator" in {
@@ -85,13 +84,13 @@ class UnfilteredActorCellMonitoringAspectSpec extends ActorCellMonitoringAspectS
       TestCounterInterface.clear()
 
       val simpleActor = system.actorOf(Props.create(new SimpleActorCreator), "SomeName")
-      TestCounterInterface.foldlByAspect(actorCount)(takeLHS) must contain(TestCounter(actorCount, 1, simpleActorTags))
+      TestCounterInterface.foldlByAspect(actorCount)(TestCounter.takeLHS) must contain(TestCounter(actorCount, 1, simpleActorTags))
       // stop(self)
       simpleActor ! 'stop
 
       Thread.sleep(500) // wait for the messages
       // we're sending gauge values here. We want the latest (hence our fold takes the 'head')
-      TestCounterInterface.foldlByAspect(actorCount)(takeLHS) must contain(TestCounter(actorCount, 0, simpleActorTags))
+      TestCounterInterface.foldlByAspect(actorCount)(TestCounter.takeLHS) must contain(TestCounter(actorCount, 0, simpleActorTags))
     }
 
     // records the count of messages received, grouped by message type
