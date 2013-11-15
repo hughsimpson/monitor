@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class HelloAkkaJava {
     public static class Greet implements Serializable {}
+    public static class Die implements Serializable {}
     public static class WhoToGreet implements Serializable {
         public final String who;
         public WhoToGreet(String who) {
@@ -36,6 +37,9 @@ public class HelloAkkaJava {
             else if (message instanceof Greet)
                 // Send the current greeting back to the sender
                 getSender().tell(new Greeting(greeting), getSelf());
+
+            else if (message.toString().equals("die"))
+                context().stop(self());
 
             else unhandled(message);
         }
@@ -68,9 +72,7 @@ public class HelloAkkaJava {
         Greeting greeting2 = (Greeting) inbox.receive(Duration.create(5, TimeUnit.SECONDS));
         System.out.println("Greeting: " + greeting2.message);
 
-        // after zero seconds, send a Greet message every second to the greeter with a sender of the GreetPrinter
-        ActorRef greetPrinter = system.actorOf(Props.create(GreetPrinter.class));
-        system.scheduler().schedule(Duration.Zero(), Duration.create(10, TimeUnit.MILLISECONDS), greeter, new Greet(), system.dispatcher(), greetPrinter);
+        ActorRef greetPrinter = system.actorOf(Props.create(GreetPrinter.class), "greetPrinter");
 
         return system;
     }
@@ -79,6 +81,9 @@ public class HelloAkkaJava {
         public void onReceive(Object message) {
             if (message instanceof Greeting)
                 System.out.println(((Greeting) message).message);
+
+            else if (message.toString().equals("die"))
+                context().stop(self());
         }
     }
 }
