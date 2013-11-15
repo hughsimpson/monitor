@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
+/*
  * Contains advices for monitoring behaviour of an actor; typically imprisoned in an {@code ActorCell}.
  */
 public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingleton() {
@@ -39,7 +39,7 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
         Increment, Decrement
     }
 
-    /**
+    /*
      * Constructs this aspect
      */
     public ActorCellMonitoringAspect() {
@@ -57,9 +57,9 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
         this.agentConfiguration = agentConfiguration;
     }
 
-    /**
+    /*
      * decide whether to include this ActorCell in our measurements
-     * */
+     */
     private boolean includeActorPath(final PathAndClass pathAndClass) {
         // do not monitor our own output code
         if (pathAndClass.actorClassName().isDefined()) {
@@ -78,9 +78,9 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
         return "user".equals(userOrSystem);
     }
 
-    /**
+    /*
      * get the sample rate for an actor
-     * */
+     */
     private int getSampleRate(final PathAndClass pathAndClass) {
         return this.agentConfiguration.sampling().getRate(pathAndClass);
     }
@@ -123,9 +123,9 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
         return tags.toArray(new String[tags.size()]);
     }
 
-    /**
+    /*
      * returns the canonical name of the actor type associated with an ActorCell
-     * */
+     */
     private String uncheckedActorNameFrom(final ActorCell actorCell) {
         return uncheckedActorNameFrom(actorCell.props());
     }
