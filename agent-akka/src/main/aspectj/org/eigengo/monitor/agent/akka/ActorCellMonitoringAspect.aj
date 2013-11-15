@@ -244,7 +244,7 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
          this.counterInterface.recordGaugeValue("akka.actor.count", currentNumberOfActors,
                  "parent."+path.parent().toString(),
                  "path."+path.toString(),
-                 "clazz."+props.clazz().toString(),
+                 "props."+props.clazz().toString(),
                  "className."+checkedClassName);
 
      }

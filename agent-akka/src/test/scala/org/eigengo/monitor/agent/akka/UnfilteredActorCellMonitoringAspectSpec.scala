@@ -45,7 +45,7 @@ class UnfilteredActorCellMonitoringAspectSpec extends ActorCellMonitoringAspectS
     // records the count of actors, grouped by simple class name
     "Record the actor count" in {
       val simpleActorPath = "path.akka://default/user/counter"
-      val simpleActorPropsClazz = "clazz.class org.eigengo.monitor.agent.akka.SimpleActor"
+      val simpleActorPropsClazz = "props.class org.eigengo.monitor.agent.akka.SimpleActor"
       val simpleActorTags = List(simpleActorParent, simpleActorPath, simpleActorPropsClazz, simpleActorPropsClassName)
       TestCounterInterface.clear()
       val actorName = "counter"
@@ -63,7 +63,7 @@ class UnfilteredActorCellMonitoringAspectSpec extends ActorCellMonitoringAspectS
 
     "Record the actor count using a creator" in {
       val simpleActorPath = "path.akka://default/user/$a"
-      val simpleActorPropsClazz = "clazz.class akka.actor.CreatorConsumer"
+      val simpleActorPropsClazz = "props.class akka.actor.CreatorConsumer"
       val simpleActorTags = List(simpleActorParent, simpleActorPath, simpleActorPropsClazz, simpleActorPropsClassName)
       TestCounterInterface.clear()
 
@@ -79,7 +79,7 @@ class UnfilteredActorCellMonitoringAspectSpec extends ActorCellMonitoringAspectS
 
     "Record the actor count of a named actor using a creator" in {
       val simpleActorPath = "path.akka://default/user/SomeName"
-      val simpleActorPropsClazz = "clazz.class akka.actor.CreatorConsumer"
+      val simpleActorPropsClazz = "props.class akka.actor.CreatorConsumer"
       val simpleActorTags = List(simpleActorParent, simpleActorPath, simpleActorPropsClazz, simpleActorPropsClassName)
       TestCounterInterface.clear()
 
