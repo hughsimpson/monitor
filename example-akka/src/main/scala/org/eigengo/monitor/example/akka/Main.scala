@@ -28,7 +28,6 @@ case class ListMaker(args: Any) {
 object Main extends App {
   val longSleep = 10
   val shortSleep = 1
-  val alist = List(2)
 
   class FooActor(bar: ActorRef) extends Actor {
     def receive: Receive = {
