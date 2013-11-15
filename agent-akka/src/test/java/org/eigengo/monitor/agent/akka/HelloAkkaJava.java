@@ -70,7 +70,7 @@ public class HelloAkkaJava {
 
         // after zero seconds, send a Greet message every second to the greeter with a sender of the GreetPrinter
         ActorRef greetPrinter = system.actorOf(Props.create(GreetPrinter.class));
-        system.scheduler().schedule(Duration.Zero(), Duration.create(1, TimeUnit.SECONDS), greeter, new Greet(), system.dispatcher(), greetPrinter);
+        system.scheduler().schedule(Duration.Zero(), Duration.create(10, TimeUnit.MILLISECONDS), greeter, new Greet(), system.dispatcher(), greetPrinter);
 
         return system;
     }
