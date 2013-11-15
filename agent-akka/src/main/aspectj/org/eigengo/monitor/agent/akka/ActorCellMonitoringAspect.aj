@@ -207,6 +207,10 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
         }
     }
 
+    private enum CountType {
+        Increment, Decrement
+    }
+
     /**
      * Advises the {@code actorOf} method of {@code ActorRefFactory} implementations
      *
@@ -214,7 +218,7 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
      * @param actor the {@code ActorRef} returned from the call
      */
     after(Props props) returning (ActorRef actor) : Pointcuts.anyActorOf(props) {
-        recordActorCount(actor.path(), props, true);
+        recordActorCount(actor.path(), props, CountType.Increment);
     }
 
     /**
@@ -223,24 +227,28 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
      * @param actorCell the {@code ActorCell} of the actor being stopped
      */
     after(ActorCell actorCell) : Pointcuts.actorCellInternalStop(actorCell) {
-        recordActorCount(actorCell.self().path(), actorCell.props(), false);
+        recordActorCount(actorCell.self().path(), actorCell.props(), CountType.Decrement);
     }
 
     /*
      * Shares logic between the actorCellInternalStop and anyActorOf advices
      */
-     private void recordActorCount(ActorPath path, Props props, boolean isCreated /*else is killed*/) {
+     private void recordActorCount(ActorPath path, Props props, CountType countType) {
          final String uncheckedClassName = uncheckedActorNameFrom(props);
          final Option<String> className = Option.apply(uncheckedClassName);
          if (!includeActorPath(new PathAndClass(path, className))) return;
 
          this.numberOfActors.putIfAbsent(className, new AtomicInteger(0));
          // increment and get the current number of actors of this type (if the value was 0, then this returns 1 -- which is correct)
-         final int currentNumberOfActors = (isCreated) ? this.numberOfActors.get(className).incrementAndGet() :
-                 this.numberOfActors.get(className).decrementAndGet();
+         final int currentNumberOfActors;
+         if (countType == CountType.Increment) currentNumberOfActors = this.numberOfActors.get(className).incrementAndGet();
+         else currentNumberOfActors = this.numberOfActors.get(className).decrementAndGet();
 
          // record the current number of actors of this type
-         String checkedClassName = (uncheckedClassName == null) ? "" : uncheckedClassName;
+         String checkedClassName;
+         if (uncheckedClassName == null) checkedClassName = "";
+         else checkedClassName = uncheckedClassName;
+
          this.counterInterface.recordGaugeValue("akka.actor.count", currentNumberOfActors,
                  "parent."+path.parent().toString(),
                  "path."+path.toString(),
