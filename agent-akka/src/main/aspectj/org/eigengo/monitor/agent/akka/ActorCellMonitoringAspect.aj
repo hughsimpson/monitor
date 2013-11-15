@@ -214,20 +214,7 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
      * @param actor the {@code ActorRef} returned from the call
      */
     after(Props props) returning (ActorRef actor) : Pointcuts.anyActorOf(props) {
-        final String uncheckedClassName = uncheckedActorNameFrom(props);
-        final Option<String> className = Option.apply(uncheckedClassName);
-        if (!includeActorPath(new PathAndClass(actor.path(), className))) return;
-
-        this.numberOfActors.putIfAbsent(className, new AtomicInteger(0));
-        // increment and get the current number of actors of this type (if the value was 0, then this returns 1 -- which is correct)
-        final int currentNumberOfActors = this.numberOfActors.get(className).incrementAndGet();
-
-        // record the current number of actors of this type
-        this.counterInterface.recordGaugeValue("akka.actor.count", currentNumberOfActors,
-                "parent."+actor.path().parent().toString(),
-                "path."+actor.path().toString(),
-                "clazz."+props.clazz().toString(),
-                "className."+uncheckedClassName);
+        recordActorCount(actor.path(), props, true);
     }
 
     /**
@@ -236,19 +223,29 @@ public aspect ActorCellMonitoringAspect extends AbstractMonitoringAspect issingl
      * @param actorCell the {@code ActorCell} of the actor being stopped
      */
     after(ActorCell actorCell) : Pointcuts.actorCellInternalStop(actorCell) {
-        final String uncheckedClassName = uncheckedActorNameFrom(actorCell);
-        final Option<String> className = Option.apply(uncheckedClassName);
-        if (!includeActorPath(new PathAndClass(actorCell.self().path(), className))) return;
-
-        this.numberOfActors.putIfAbsent(className, new AtomicInteger(0));
-        // decrement and get the current number of actors of this type (if the value was 1, then this returns 0 -- which is correct)
-        final int currentNumberOfActors = this.numberOfActors.get(className).decrementAndGet();
-
-        this.counterInterface.recordGaugeValue("akka.actor.count", currentNumberOfActors,
-                "parent."+actorCell.self().path().parent().toString(),
-                "path."+actorCell.self().path().toString(),
-                "clazz."+actorCell.props().clazz().toString(),
-                "className."+uncheckedClassName);
+        recordActorCount(actorCell.self().path(), actorCell.props(), false);
     }
 
+    /**
+     * Shares logic between the actorCellInternalStop and anyActorOf advices
+     * */
+     private void recordActorCount(ActorPath path, Props props, boolean isCreated /*else is killed*/) {
+         final String uncheckedClassName = uncheckedActorNameFrom(props);
+         final Option<String> className = Option.apply(uncheckedClassName);
+         if (!includeActorPath(new PathAndClass(path, className))) return;
+
+         this.numberOfActors.putIfAbsent(className, new AtomicInteger(0));
+         // increment and get the current number of actors of this type (if the value was 0, then this returns 1 -- which is correct)
+         final int currentNumberOfActors = (isCreated) ? this.numberOfActors.get(className).incrementAndGet() :
+                 this.numberOfActors.get(className).decrementAndGet();
+
+         // record the current number of actors of this type
+         String checkedClassName = (uncheckedClassName == null) ? "" : uncheckedClassName;
+         this.counterInterface.recordGaugeValue("akka.actor.count", currentNumberOfActors,
+                 "parent."+path.parent().toString(),
+                 "path."+path.toString(),
+                 "clazz."+props.clazz().toString(),
+                 "className."+checkedClassName);
+
+     }
 }
