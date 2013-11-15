@@ -31,15 +31,15 @@ public class HelloAkkaJava {
         String greeting = "";
 
         public void onReceive(Object message) {
-            if (message instanceof WhoToGreet)
+            if (message.toString().equals("die"))
+            context().stop(self());
+
+            else if (message instanceof WhoToGreet)
                 greeting = "hello, " + ((WhoToGreet) message).who;
 
             else if (message instanceof Greet)
                 // Send the current greeting back to the sender
                 getSender().tell(new Greeting(greeting), getSelf());
-
-            else if (message.toString().equals("die"))
-                context().stop(self());
 
             else unhandled(message);
         }
@@ -79,11 +79,12 @@ public class HelloAkkaJava {
 
     public static class GreetPrinter extends UntypedActor {
         public void onReceive(Object message) {
-            if (message instanceof Greeting)
+            if (message.toString().equals("die"))
+                context().stop(self());
+
+            else if (message instanceof Greeting)
                 System.out.println(((Greeting) message).message);
 
-            else if (message.toString().equals("die"))
-                context().stop(self());
         }
     }
 }
