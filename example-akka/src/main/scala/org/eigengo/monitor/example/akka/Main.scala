@@ -18,6 +18,7 @@ package org.eigengo.monitor.example.akka
 import akka.actor.{ActorRef, Props, ActorSystem, Actor}
 import akka.routing.RoundRobinRouter
 
+// This is cheating
 case class ListMaker(args: Any) {
   def toSomeSeq: Seq[Any] = Seq(args)
   def toStringSeq: Seq[String] = Seq(args.toString)

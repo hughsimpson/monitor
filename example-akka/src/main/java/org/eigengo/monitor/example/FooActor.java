@@ -11,10 +11,6 @@ public class FooActor extends UntypedActor {
     int longSleep = 10;
     final ActorRef bar;
 
-//    @Override public void preStart()  {
-//        //  create  the  bar  actor
-//        bar = getContext().actorOf(Props.create(BarActor.class, List.empty()), "greeter");
-//    }
     FooActor(ActorRef baz) {
         this.bar = baz;
     }
