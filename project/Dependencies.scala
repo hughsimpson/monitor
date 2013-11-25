@@ -23,6 +23,11 @@ object Dependencies {
     val testkit = "com.typesafe.akka" %% "akka-testkit" % akka_version
   }
 
+  object playd {
+    val core = "org.webjars" %% "webjars-play" % "2.2.0"
+    val bootstrap = "org.webjars" % "bootstrap" % "2.3.1"
+  }
+
   object spray {
     val spray_version = "1.2-RC2"
 
