@@ -1,3 +1,6 @@
+// Comment to get more information for play during initialization
+logLevel := Level.Warn
+
 resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
 resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"

@@ -37,7 +37,7 @@ object MonitorBuild extends Build {
       fork in run := true,
       connectInput in run := true,
       mainClass in (Compile, run) := Some("org.eigengo.monitor.example.akka.Main")),
-    aggregate = Seq(agent, output, output_statsd, agent_akka, agent_spray, agent_play, example_akka, docs)) dependsOn (example_akka)
+    aggregate = Seq(agent, output, output_statsd, agent_akka, agent_spray, agent_play, example_akka, example_play, docs)) dependsOn (example_akka, agent_play)
 
 /*
   lazy val macros = module("macros") settings(
@@ -75,16 +75,21 @@ object MonitorBuild extends Build {
     javaOptions in Test += "-javaagent:" + System.getProperty("user.home") + s"/.ivy2/cache/org.aspectj/aspectjweaver/jars/aspectjweaver-$aspectj_version.jar",
     fork in Test := true
   )
-  lazy val agent_spray = module("agent-spray") dependsOn(agent, output)
-  lazy val agent_play  = module("agent-play", BuildSettings.aspectjCompileSettings ++ play.Project.playScalaSettings)  dependsOn(agent, output, test % "test") settings (
+  lazy val agent_play  = module("agent-play", BuildSettings.aspectjCompileSettings ++ play.Project.playJavaSettings) dependsOn(agent, output, test % "test") settings (
     libraryDependencies += aspectj_weaver,
     libraryDependencies += playd.core,
     libraryDependencies += playd.bootstrap,
-    javaOptions in Test += "-javaagent:" + System.getProperty("user.home") + s"/.ivy2/cache/org.aspectj/aspectjweaver/jars/aspectjweaver-$aspectj_version.jar"
+    javaOptions in Test += "-javaagent:" + System.getProperty("user.home") + s"/.ivy2/cache/org.aspectj/aspectjweaver/jars/aspectjweaver-$aspectj_version.jar",
+    fork in Test := true
   )
+  lazy val agent_spray = module("agent-spray") dependsOn(agent, output)
 
   lazy val example_akka = module("example-akka") dependsOn(agent_akka, output_statsd) settings (
     libraryDependencies += akka.actor
+  )
+  lazy val example_play = module("example-play", play.Project.playScalaSettings) dependsOn(agent_play, output_statsd) settings (
+    libraryDependencies += playd.core,
+    libraryDependencies += playd.bootstrap
   )
   lazy val example_spray = module("example-spray") dependsOn(agent_spray, output_statsd) settings (
     libraryDependencies += spray.can,
