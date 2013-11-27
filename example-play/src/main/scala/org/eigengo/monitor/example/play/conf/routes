@@ -1,9 +1,0 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
-
-GET     /                           org.eigengo.monitor.agent.play.app.controllers.Application.index()
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               org.eigengo.monitor.agent.play.app.controllers.Assets.at(path="/public", file)
-GET     /webjars/*file              org.eigengo.monitor.agent.play.app.controllers.WebJarAssets.at(file)

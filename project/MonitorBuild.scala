@@ -51,7 +51,7 @@ object MonitorBuild extends Build {
       (scalaVersion)(v => Seq(("org.scala-lang" % "scala-compiler" % v), ("org.scala-lang" % "scala-reflect" % v)))))
 */
 
-
+  /* common modules */
   lazy val agent = module("agent") settings (
   	libraryDependencies += typesafe_config
   )
@@ -59,15 +59,17 @@ object MonitorBuild extends Build {
     libraryDependencies += typesafe_config,
     libraryDependencies += specs2 % "test"
   )
+  lazy val test = module("test") dependsOn (output) settings (
+    libraryDependencies += specs2,
+    libraryDependencies += akka.testkit
+    )
+  /* output modules */
   lazy val output_statsd = module("output-statsd") dependsOn (output) settings (
   	libraryDependencies += dogstatsd_client,
     libraryDependencies += akka.actor,
     libraryDependencies += specs2 % "test"
   )
-  lazy val test = module("test") dependsOn (output) settings (
-  	libraryDependencies += specs2,
-    libraryDependencies += akka.testkit
-  )
+  /* agent modules */
   lazy val agent_akka = module("agent-akka", BuildSettings.aspectjCompileSettings) dependsOn (agent, output, test % "test") settings (
   	libraryDependencies += aspectj_weaver,
   	libraryDependencies += akka.actor,
@@ -75,7 +77,7 @@ object MonitorBuild extends Build {
     javaOptions in Test += "-javaagent:" + System.getProperty("user.home") + s"/.ivy2/cache/org.aspectj/aspectjweaver/jars/aspectjweaver-$aspectj_version.jar",
     fork in Test := true
   )
-  lazy val agent_play  = module("agent-play", BuildSettings.aspectjCompileSettings ++ play.Project.playJavaSettings) dependsOn(agent, output, test % "test") settings (
+  lazy val agent_play  = module("agent-play") dependsOn(agent, output, test % "test", play_test_app_1 % "test") settings (
     libraryDependencies += aspectj_weaver,
     libraryDependencies += playd.core,
     libraryDependencies += playd.bootstrap,
@@ -83,7 +85,11 @@ object MonitorBuild extends Build {
     fork in Test := true
   )
   lazy val agent_spray = module("agent-spray") dependsOn(agent, output)
-
+  /* example apps */
+  lazy val play_test_app_1 = play.Project("playTestApp1", "1.0",
+    Seq(playd.core, playd.bootstrap),
+    file("agent-play/src/test/scala/org/eigengo/monitor/agent/play/testApp1"),
+    play.Project.playScalaSettings)
   lazy val example_akka = module("example-akka") dependsOn(agent_akka, output_statsd) settings (
     libraryDependencies += akka.actor
   )
