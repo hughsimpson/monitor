@@ -4,9 +4,9 @@ import org.specs2.mutable.Specification
 import controllers.routes
 
 import play.mvc._
-
 import play.test.Helpers._
-import org.fest.assertions._
+import play.api.http.Status._
+import org.fest.assertions.Assertions._
 
 class ApplicationSpec extends Specification {
 
@@ -32,16 +32,16 @@ class ApplicationSpec extends Specification {
     }
 
     "index should contain the correct string" in {
-//      running(fakeApplication(), new Runnable() {
-//        def run() {
-//          val result: Result = callAction(routes.ref.MainController.index());
-//          assertThat(status(result)).isEqualTo(OK);
-//          assertThat(contentType(result)).isEqualTo("text/html");
-//          assertThat(charset(result)).isEqualTo("utf-8");
-//          assertThat(contentAsString(result)).contains("Hello from Java");
-//        }
-//      })
-      failure
+      running(fakeApplication(), new Runnable() {
+        def run() {
+          def result: Result = callAction(routes.ref.MainController.index())
+          status(result) === OK
+          contentType(result) === "text/html"
+          charset(result) === "utf-8"
+          contentAsString(result) must contain("Hello from Java")
+        }
+      })
+      success
     }
 
   }

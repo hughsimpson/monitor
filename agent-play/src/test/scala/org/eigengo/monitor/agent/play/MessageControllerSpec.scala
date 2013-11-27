@@ -21,9 +21,6 @@ class MessageControllerSpec extends Specification {
       charset(result) must beSome("utf-8")
       contentAsString(result) must contain("Hello from Scala")
     }
-    "be another test" in {
-      success
-    }
 
   }
 }
