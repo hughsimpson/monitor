@@ -2,10 +2,10 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /                           org.eigengo.monitor.agent.play.testApp1.app.controllers.TestingApp.index()
-GET     /message                    org.eigengo.monitor.agent.play.testApp1.app.controllers.MessageController.getMessage()
-GET     /assets/javascripts/routes  org.eigengo.monitor.agent.play.testApp1.app.controllers.MessageController.javascriptRoutes()
+GET     /                           controllers.TestingApp.index()
+GET     /message                    controllers.MessageController.getMessage()
+GET     /assets/javascripts/routes  controllers.MessageController.javascriptRoutes()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/org/eigengo/monitor/agent/play/testApp1/public", file)
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /webjars/*file              controllers.WebJarAssets.at(file)

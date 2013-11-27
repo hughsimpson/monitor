@@ -77,10 +77,11 @@ object MonitorBuild extends Build {
     javaOptions in Test += "-javaagent:" + System.getProperty("user.home") + s"/.ivy2/cache/org.aspectj/aspectjweaver/jars/aspectjweaver-$aspectj_version.jar",
     fork in Test := true
   )
-  lazy val agent_play  = module("agent-play") dependsOn(agent, output, test % "test", play_test_app_1 % "test") settings (
+  lazy val agent_play  = module("agent-play"/*, play.Project.playScalaSettings*/) dependsOn(agent, output, test % "test", play_test_app_1 % "test") settings (
     libraryDependencies += aspectj_weaver,
     libraryDependencies += playd.core,
     libraryDependencies += playd.bootstrap,
+    libraryDependencies += fest_test,
     javaOptions in Test += "-javaagent:" + System.getProperty("user.home") + s"/.ivy2/cache/org.aspectj/aspectjweaver/jars/aspectjweaver-$aspectj_version.jar",
     fork in Test := true
   )
@@ -90,6 +91,7 @@ object MonitorBuild extends Build {
     Seq(playd.core, playd.bootstrap),
     file("agent-play/src/test/scala/org/eigengo/monitor/agent/play/testApp1"),
     play.Project.playScalaSettings)
+
   lazy val example_akka = module("example-akka") dependsOn(agent_akka, output_statsd) settings (
     libraryDependencies += akka.actor
   )

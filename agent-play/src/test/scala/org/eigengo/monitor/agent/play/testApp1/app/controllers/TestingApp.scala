@@ -1,4 +1,4 @@
-package org.eigengo.monitor.agent.play.testApp1.app.controllers
+package controllers
 
 import play.api.mvc.{Action, Controller}
 
