@@ -11,9 +11,6 @@ import org.fest.assertions.Assertions._
 class ApplicationSpec extends Specification {
 
   "Play" should {
-    "be here" in {
-      success
-    }
 
     "perform simple check" in {
         var a = 1 + 1
