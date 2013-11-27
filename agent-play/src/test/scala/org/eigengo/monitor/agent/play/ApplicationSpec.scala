@@ -5,7 +5,7 @@ import controllers.routes
 
 import play.mvc._
 
-//import play.test.Helpers._
+import play.test.Helpers._
 import org.fest.assertions._
 
 class ApplicationSpec extends Specification {
@@ -21,17 +21,17 @@ class ApplicationSpec extends Specification {
     }
 
     "index template should contain the String that is passed to it" in {
-//      running(fakeApplication(), new Runnable() {
-//        def run() {
-//          val html: Content = views.html.index.render("Your new application is ready.")
-//          assertThat(contentType(html)).isEqualTo("text/html")
-//          assertThat(contentAsString(html)).contains("Your new application is ready.")
-//        }
-//      })
+      running(fakeApplication(), new Runnable() {
+        def run() {
+          val html: Content = views.html.index.render("Your new application is ready.")
+          contentType(html) === "text/html"
+          contentAsString(html) must contain("Your new application is ready.")
+        }
+      })
       success
     }
 
-//    "index should contain the correct string" in {
+    "index should contain the correct string" in {
 //      running(fakeApplication(), new Runnable() {
 //        def run() {
 //          val result: Result = callAction(routes.ref.MainController.index());
@@ -41,8 +41,8 @@ class ApplicationSpec extends Specification {
 //          assertThat(contentAsString(result)).contains("Hello from Java");
 //        }
 //      })
-//
-//    }
+      failure
+    }
 
   }
 

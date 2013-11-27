@@ -41,4 +41,5 @@ object Dependencies {
 
   val specs2           = "org.specs2"        %% "specs2"                    % "2.2.3"
   val fest_test        = "org.easytesting"    % "fest-assertion-generator"  % "1.1"
+  val play_test        = "com.typesafe.play" %% "play-test"                 % "2.2.1"
 }

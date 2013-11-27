@@ -82,6 +82,7 @@ object MonitorBuild extends Build {
     libraryDependencies += playd.core,
     libraryDependencies += playd.bootstrap,
     libraryDependencies += fest_test,
+    libraryDependencies += play_test,
     javaOptions in Test += "-javaagent:" + System.getProperty("user.home") + s"/.ivy2/cache/org.aspectj/aspectjweaver/jars/aspectjweaver-$aspectj_version.jar",
     fork in Test := true
   )
